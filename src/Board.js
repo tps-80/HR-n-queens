@@ -117,11 +117,30 @@
     //
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(colIndex) {
+      var rows = this.rows();
+      var count = 0;
+      for(var i = 0; i < rows.length; i++) {
+        if (count > 1) {
+          return true;
+        }
+        if (rows[i][colIndex] === 1) {
+          count++;
+        }
+      }
+      //loop over rows
+      //if count > 1 return true
+        //if this row at colindex === 1 count increment
       return false; // fixme
     },
 
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function() {
+      var rows = this.rows()
+      for(var i = 0; i < rows.length; i++) {
+        if (this.hasColConflictAt(i)) {
+          return true;
+        }
+      }
       return false; // fixme
     },
 
