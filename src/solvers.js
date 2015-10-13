@@ -58,7 +58,7 @@ window.countNRooksSolutions = function(n) {
 //  //      board.get(i)[j] = 0;
 //  //    }
 //  // }
-var inner = function(board, coords, row) {
+// var inner = function(board, coords, row) {
 //     counter++;
 // // for(var j = 0; j < coords.length; j++) {
 // //   for(var k = 0; k < coords.length; k++) {
@@ -81,7 +81,12 @@ var inner = function(board, coords, row) {
 // //  console.log(coords)
 // //  inner(board, coords, row+1)
 // // }
-
+var inner = function(board, col, rows) {
+  if(rows === n-1) {
+    return;
+  }
+  
+}
 //  return inner(solution, coords, 0)
 // }
 // console.log(coords)
