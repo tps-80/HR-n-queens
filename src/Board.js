@@ -147,15 +147,11 @@
       var rows = this.rows();
       var count = 0;
       var num = majorDiagonalColumnIndexAtFirstRow;
-
-      for (var i = 0; i < this.get('n'); i++) {
-        if (count > 1) {
-          return true;
-        }
-        if (rows[i][num + 1] === 1) {
-          count++;
-        }
-        num++;
+      console.log(this.get('n'))
+      for (var i = 0, k = majorDiagonalColumnIndexAtFirstRow; i < this.get('n') ; i++, k++) {
+       if(this.rows()[i][k] === 1) {
+        count++;
+       }
       }
 
       // for(var i = 0 ; i < rows.length; i++) {
@@ -166,7 +162,7 @@
       //     count++;
       //   }
       // }
-      return false; // fixme
+      return count > 1; // fixme
     },
 
     // test if any major diagonals on this board contain conflicts
@@ -190,23 +186,29 @@
       var rows = this.rows();
       var count = 0;
       var num = minorDiagonalColumnIndexAtFirstRow;
+      var length = this.rows().length-1;
       //start at row 0 and start at the column which input prescribes
       //decrement until num is equal to 0;
         //increment row number and decrement index number
-        for (var i = 0; i < rows.length; i++) {
-          //if count > 1 return true
-          if (count > 1) {
-            return true;
-          }
-          //if current element is === 1 increment count
-          if (rows[i][num] === 1) {
+        // for (var i = 0; i < rows.length; i++) {
+        //   //if count > 1 return true
+        //   if (count > 1) {
+        //     return true;
+        //   }
+        //   //if current element is === 1 increment count
+        //   if (rows[i][num] === 1) {
+        //     count++;
+        //   }
+        //   num-=1;
+        // }
+        for(var i = 0, j = num; i < this.get('n'); i++, j++) {
+          if(this.rows()[i][length -j] === 1) {
             count++;
-          }
-          num--;
+          };
         }
 
       //return false
-      return false; // fixme
+      return count > 1; // fixme
     },
 
     // test if any minor diagonals on this board contain conflicts
