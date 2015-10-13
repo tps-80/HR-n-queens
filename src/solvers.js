@@ -25,69 +25,95 @@ window.findNRooksSolution = function(n) {
     }
  }
 //  console.log(cords)
-// console.log(solution.rows())
+console.log("Solution rows",solution.rows())
 
 // console.log(results)
   // console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution.rows()));
-  console.log(JSON.stringify(solution.rows()))
   return solution.rows();
 };
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n) {
-  // var factorial = function(num) {
-  //   if( num === 0) {
-  //     return 1;
-  //   }
-  //   else {
-  //     return num * factorial(num-=1)
-  //   }
-  // }
-  // var solutionCount = factorial(n); //fixme
-  var solution = new Board({n: n});
-  var counter = 0;
-  var coords = {};
-//   var innerFunc = function(board) {
-//  //    for (var i = 0; i < board.rows().length; i++) {
-//  //      for(var j = 0; j < board.rows()[i].length; j++){
-//  //    board.togglePiece(i, i);
-//  //    if (!board.hasAnyColConflicts() && !board.hasAnyRowConflicts()) {
-//  //      board.get(i)[j] = 1;
-//  //      coords.push([i,j])
-//  //    } else {
-//  //      board.get(i)[j] = 0;
-//  //    }
-//  // }
-// var inner = function(board, coords, row) {
-//     counter++;
-// // for(var j = 0; j < coords.length; j++) {
-// //   for(var k = 0; k < coords.length; k++) {
-// //     if(coords[j][k] === 1) {
-// //       board.get(j)[k] === "*"
-// //     }
-// //   }
-// // }
-// // for (var i = 0; i < solution.rows().length; i++) {
-// //     solution.togglePiece(i, i);
-// //     if (solution.get(i)[i] !== "*" && !solution.hasAnyRooksConflicts()) {
-// //       solution.get(i)[i] = 1;
-// //       coords[i][i] = ;
-// //   }
-// //  }
-// //  if(row === board.rows().length-1) {
-// //   return counter;
-// //  }
-// //  console.log(counter)
-// //  console.log(coords)
-// //  inner(board, coords, row+1)
-// // }
-var inner = function(board, col, rows) {
-  if(rows === n-1) {
-    return;
+  var solution = new Board({n:n});
+
+  var count = 0;
+
+  var innerFunc = function(row){
+    //doesn't need to check last row as will always be able to contain a 1 if no column conflicts
+    if(row === n-1){
+      count++
+      return;
+    }
+
+    //starts a loop through the columns 
+      //after we check all the rows in one column, we move back up the call stack and check the next column
+      //because we call innerFunc inside a for loop, it's like having nested for loops
+
+
+    for(var col = 0; col < n; col ++) {
+      solution.get(row)[col] = 1;
+      if(!solution.hasColConflictAt(col)) {
+        //only need to check col conflict at said column as if there is no conflict we immediately change the row
+        innerFunc(row+1)
+      }
+      solution.get(row)[col] = 0;
+    }
   }
-  
-}
-//  return inner(solution, coords, 0)
+   innerFunc(0);
+ return count;
+
+  // innerFunc(0);
+  // return count;
+//   // var factorial = function(num) {
+//   //   if( num === 0) {
+//   //     return 1;
+//   //   }
+//   //   else {
+//   //     return num * factorial(num-=1)
+//   //   }
+//   // }
+//   // var solutionCount = factorial(n); //fixme
+//   var solution = new Board({n: n});
+//   var counter = 0;
+//   var coords = {};
+// //   var innerFunc = function(board) {
+// //  //    for (var i = 0; i < board.rows().length; i++) {
+// //  //      for(var j = 0; j < board.rows()[i].length; j++){
+// //  //    board.togglePiece(i, i);
+// //  //    if (!board.hasAnyColConflicts() && !board.hasAnyRowConflicts()) {
+// //  //      board.get(i)[j] = 1;
+// //  //      coords.push([i,j])
+// //  //    } else {
+// //  //      board.get(i)[j] = 0;
+// //  //    }
+// //  // }
+// // var inner = function(board, coords, row) {
+// //     counter++;
+// // // for(var j = 0; j < coords.length; j++) {
+// // //   for(var k = 0; k < coords.length; k++) {
+// // //     if(coords[j][k] === 1) {
+// // //       board.get(j)[k] === "*"
+// // //     }
+// // //   }
+// // // }
+// // // for (var i = 0; i < solution.rows().length; i++) {
+// // //     solution.togglePiece(i, i);
+// // //     if (solution.get(i)[i] !== "*" && !solution.hasAnyRooksConflicts()) {
+// // //       solution.get(i)[i] = 1;
+// // //       coords[i][i] = ;
+// // //   }
+// // //  }
+// // //  if(row === board.rows().length-1) {
+// // //   return counter;
+// // //  }
+// // //  console.log(counter)
+// // //  console.log(coords)
+// // //  inner(board, coords, row+1)
+// // // }
+// var inner = function(board, col, rows) {
+//   if(rows === n-1) {
+//     return;
+//   }
 // }
 // console.log(coords)
   // console.log(coords);
@@ -99,31 +125,31 @@ var inner = function(board, col, rows) {
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
 window.findNQueensSolution = function(n) {
-   var solution = new Board({n:n});
-//  for (var i = 0; i < solution.rows().length; i++) {
-//   for (var j = 0; j < solution.rows()[i].length; j++) {
-//       solution.togglePiece(i, j);
-//     if (solution.hasAnyQueensConflicts() ) {
-//       solution.get(i)[j] = 0;
-//     } 
+//    var solution = new Board({n:n});
+// //  for (var i = 0; i < solution.rows().length; i++) {
+// //   for (var j = 0; j < solution.rows()[i].length; j++) {
+// //       solution.togglePiece(i, j);
+// //     if (solution.hasAnyQueensConflicts() ) {
+// //       solution.get(i)[j] = 0;
+// //     } 
+// //   }
+// // }
+// //  console.log(solution.rows())
+// //   console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
+// //   return solution;
+// var row = 0;
+// var col = 0;
+//   var innerFunc = function(board) {
+//       board.togglePiece(row, col)
+//     if(board.hasAnyQueensConflicts()) {
+//       innerFunc(board, row+1, col);
+//     }
+//     innerFunc(board, row, col+1);
+//     if(col === board.rows().length ||  row === board.rows().length) {
+//       return board;
+//     }
 //   }
-// }
-//  console.log(solution.rows())
-//   console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
-//   return solution;
-var row = 0;
-var col = 0;
-  var innerFunc = function(board) {
-      board.togglePiece(row, col)
-    if(board.hasAnyQueensConflicts()) {
-      innerFunc(board, row+1, col);
-    }
-    innerFunc(board, row, col+1);
-    if(col === board.rows().length ||  row === board.rows().length) {
-      return board;
-    }
-  }
-  return innerFunc(solution,0,0);
+//   return innerFunc(solution,0,0);
 };
 
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
