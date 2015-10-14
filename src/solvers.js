@@ -17,7 +17,6 @@
 window.findNRooksSolution = function(n) {
   var solution = new Board({n:n});
   var counter = 0;
-  var cords = []
  for (var i = 0; i < solution.rows().length; i++) {
     solution.togglePiece(i, i);
     if (!solution.hasAnyRooksConflicts()) {
@@ -34,33 +33,25 @@ console.log("Solution rows",solution.rows())
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n) {
-  var solution = new Board({n:n});
-
   var count = 0;
+  var board = new Board({n: n});
 
-  var innerFunc = function(row){
-    //doesn't need to check last row as will always be able to contain a 1 if no column conflicts
-    if(row === n-1){
-      count++
+  var innerFunc = function (row) {
+    if(row === n) {
+      count++;
       return;
     }
-
-    //starts a loop through the columns 
-      //after we check all the rows in one column, we move back up the call stack and check the next column
-      //because we call innerFunc inside a for loop, it's like having nested for loops
-
-
-    for(var col = 0; col < n; col ++) {
-      solution.get(row)[col] = 1;
-      if(!solution.hasColConflictAt(col)) {
-        //only need to check col conflict at said column as if there is no conflict we immediately change the row
+    for(var col = 0; col < n; col++) {
+      board.togglePiece(row, col);
+      if(!board.hasAnyRooksConflicts()) {
         innerFunc(row+1)
       }
-      solution.get(row)[col] = 0;
+      board.togglePiece(row, col);
     }
   }
-   innerFunc(0);
- return count;
+innerFunc(0)
+return count;
+
 
   // innerFunc(0);
   // return count;
@@ -125,37 +116,98 @@ window.countNRooksSolutions = function(n) {
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
 window.findNQueensSolution = function(n) {
-//    var solution = new Board({n:n});
-// //  for (var i = 0; i < solution.rows().length; i++) {
-// //   for (var j = 0; j < solution.rows()[i].length; j++) {
-// //       solution.togglePiece(i, j);
-// //     if (solution.hasAnyQueensConflicts() ) {
-// //       solution.get(i)[j] = 0;
-// //     } 
-// //   }
-// // }
-// //  console.log(solution.rows())
-// //   console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
-// //   return solution;
-// var row = 0;
-// var col = 0;
-//   var innerFunc = function(board) {
-//       board.togglePiece(row, col)
-//     if(board.hasAnyQueensConflicts()) {
-//       innerFunc(board, row+1, col);
-//     }
-//     innerFunc(board, row, col+1);
-//     if(col === board.rows().length ||  row === board.rows().length) {
-//       return board;
-//     }
-//   }
-//   return innerFunc(solution,0,0);
+//pass column and row to function arguments
+  //none are given assign zero for each
+//  row === undefined ? row = 0 : row = row;
+//  col === undefined ? col = 0 : col = col;
+//  board === undefined ? board = new Board({n:n}) : board = board;
+ 
+//  for (var i = row; i < board.rows().length; i++) {
+//     for(var j = col; j < board.rows().length; j++) {
+//       board.togglePiece(i, j);
+//       if (!board.hasAnyQueensConflicts() ) {
+//         board.get(i)[j] = 1;
+//       } else {
+//         board.togglePiece(i, j);
+//       }
+//    }
+// }
+// var y = _.reduce(board.rows(), function(a,b) {return a.concat(b)}, [])
+// console.log(y)
+// var x = _.reduce(y,function(a,b){return a + b})
+// console.log(y)
+// //at the end call reduce on the array of arrays (solution)
+//   //if reduce === n weve got out solution so return board
+//       //if not reset board and call function again, starting one square off from where we were before
+// console.log('Single solution for ' + n + ' queens:', JSON.stringify(board.rows()));
+//  return board.rows()
+var board = new Board({n:n});
+var haveSolution = undefined;
+
+
+  var innerFunc = function(row){
+    //doesn't need to check last row as will always be able to contain a 1 if no column conflicts
+    if(row === n){
+      haveSolution = board.rows()
+      return;
+    }
+
+    //starts a loop through the columns 
+      //after we check all the rows in one column, we move back up the call stack and check the next column
+      //because we call innerFunc inside a for loop, it's like having nested for loops
+
+
+    for(var i = 0; i < n; i++) {
+      board.togglePiece(row, i);
+      if(!board.hasAnyQueensConflicts(row, i)) {
+        //only need to check col conflict at said column as if there is no conflict we immediately change the row
+        innerFunc(row+1);
+        if(haveSolution) {
+          return;
+        }
+      }
+      board.togglePiece(row, i);
+    }
+  }
+   innerFunc(0);
+   if(haveSolution === undefined) {
+    solution = new Board({n:n}).rows();
+   }
+
+     // console.log('Number of solutions for ' + n + ' queens:', count);
+ return haveSolution;
+
+
 };
 
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
 window.countNQueensSolutions = function(n) {
-  var solution = undefined; //fixme
+  var solution = new Board({n:n});
 
-  console.log('Number of solutions for ' + n + ' queens:', solutionCount);
-  return solutionCount;
+  var count = 0;
+
+  var innerFunc = function(row){
+    //doesn't need to check last row as will always be able to contain a 1 if no column conflicts
+    if(row === n){
+      count++
+      return;
+    }
+
+    //starts a loop through the columns 
+      //after we check all the rows in one column, we move back up the call stack and check the next column
+      //because we call innerFunc inside a for loop, it's like having nested for loops
+
+
+    for(var i = 0; i < n; i++) {
+      solution.togglePiece(row, i);
+      if(!solution.hasAnyQueensConflicts()) {
+        //only need to check col conflict at said column as if there is no conflict we immediately change the row
+        innerFunc(row+1)
+      }
+      solution.togglePiece(row, i);
+    }
+  }
+   innerFunc(0);
+     console.log('Number of solutions for ' + n + ' queens:', count);
+ return count;
 };
